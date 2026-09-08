@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolis Pre-Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff5f5;
+            color: #333;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #ff6b81;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background-color: #ff6b81;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #ff4757;
+        }
+    </style>
+</head>
+<body>
 
+    <h1>🍧 Fresh Bolis Pre-Order 🍧</h1>
+    <p style="text-align: center;">Place your order below!</p>
+
+    <!-- REPLACE YOUR_FORM_ID_HERE WITH YOUR ACTUAL KEY LATER -->
+    <form action="https://formspree.io" method="POST">
+        
+        <!-- Name Input -->
+        <div class="form-group">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="Customer Name" required placeholder="Enter your full name">
+        </div>
+
+        <!-- Quantity Input -->
+        <div class="form-group">
+            <label for="quantity">How many ice pops?</label>
+            <input type="number" id="quantity" name="Quantity" min="1" max="50" required placeholder="0">
+        </div>
+
+        <!-- Flavor Selection -->
+        <div class="form-group">
+            <label for="flavor">Choose Flavor:</label>
+            <select id="flavor" name="Flavor" required>
+                <option value="" disabled selected>-- Select a Flavor --</option>
+                <option value="Horchata">Horchata</option>
+                <option value="Mango">Mango (Fruit)</option>
+                <option value="Strawberry">Strawberry (Fruit)</option>
+                <option value="Coconut">Coconut</option>
+                <option value="Lime">Lime (Fruit)</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit Pre-Order</button>
+        
+    </form>
+
+</body>
+</html>
