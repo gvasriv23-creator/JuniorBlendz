@@ -1,1 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
 
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>JuniorBlendz Orders</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+
+            font-size: 45px;
+
+            color: #e60000;
+
+            text-shadow:
+                -3px -3px 0 #000,
+                 3px -3px 0 #000,
+                -3px  3px 0 #000,
+                 3px  3px 0 #000;
+        }
+
+        .orders {
+            background: white;
+
+            border: 3px solid black;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #e60000;
+
+            color: white;
+
+            padding: 16px;
+
+            font-size: 17px;
+        }
+
+        td {
+            padding: 15px;
+
+            border-bottom: 1px solid #ddd;
+
+            text-align: center;
+        }
+
+        tr:hover {
+            background: #fff0f0;
+        }
+
+        .refresh {
+            display: block;
+
+            margin: 20px auto;
+
+            padding: 13px 25px;
+
+            background: #e60000;
+
+            color: white;
+
+            border: 3px solid black;
+
+            border-radius: 10px;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .refresh:hover {
+            background: #b80000;
+        }
+
+        .empty {
+            text-align: center;
+
+            padding: 30px;
+
+            font-size: 18px;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 35px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th,
+            td {
+                padding: 10px 5px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>JuniorBlendz Orders</h1>
+
+    <button class="refresh" onclick="loadOrders()">
+        🔄 Refresh Orders
+    </button>
+
+    <div class="orders">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Bolis</th>
+                    <th>Flavor</th>
+                    <th>Time</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="orders">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // =========================================================
+    // PUT YOUR SUPABASE INFORMATION HERE
+    // =========================================================
+
+    const SUPABASE_URL =
+        "YOUR_SUPABASE_PROJECT_URL";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+
+    const { createClient } = window.supabase;
+
+    const supabase = createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+    // =========================================================
+    // LOAD ORDERS
+    // =========================================================
+
+    async function loadOrders() {
+
+        const ordersElement =
+            document.getElementById("orders");
+
+
+        ordersElement.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    Loading orders...
+                </td>
+            </tr>
+        `;
+
+
+        const { data, error } = await supabase
+
+            .from("orders")
+
+            .select("*")
+
+            .order("created_at", {
+                ascending: false
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            ordersElement.innerHTML = `
+                <tr>
+                    <td colspan="4">
+                        Could not load orders.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        if (!data || data.length === 0) {
+
+            ordersElement.innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty">
+                        No orders yet.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        ordersElement.innerHTML = "";
+
+
+        data.forEach(order => {
+
+            const row =
+                document.createElement("tr");
+
+
+            const date =
+                new Date(order.created_at);
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHTML(order.name)}
+                </td>
+
+                <td>
+                    ${order.amount}
+                </td>
+
+                <td>
+                    ${escapeHTML(order.flavor)}
+                </td>
+
+                <td>
+                    ${date.toLocaleString()}
+                </td>
+
+            `;
+
+
+            ordersElement.appendChild(row);
+
+        });
+
+    }
+
+
+    // Prevent submitted names/flavors from being interpreted as HTML
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+
+    }
+
+
+    // Load orders when page opens
+    loadOrders();
+
+</script>
+
+</body>
+</html>
